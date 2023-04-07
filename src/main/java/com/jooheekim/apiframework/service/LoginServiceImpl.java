@@ -1,12 +1,16 @@
 package com.jooheekim.apiframework.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jooheekim.apiframework.mapper.LoginMapper;
 import com.jooheekim.utilLib.common.CommonUtil;
 import com.jooheekim.utilLib.common.ParameterUtil;
 import com.jooheekim.utilLib.common.ResponseManager;
@@ -14,6 +18,9 @@ import com.jooheekim.utilLib.common.ResponseManager;
 @Service("LoginService")
 public class LoginServiceImpl implements LoginService{
 	Logger logger = LogManager.getLogger(LoginServiceImpl.class);
+	
+	@Autowired
+	private LoginMapper loginMapper;
 	
 	@Override
 	public void getTest(ResponseManager respManager) throws Exception {
@@ -30,10 +37,13 @@ public class LoginServiceImpl implements LoginService{
 			System.out.println("VERSION_INFO::"+VERSION_INFO);
 			System.out.println("PAGE_NUM::"+PAGE_NUM);
 			System.out.println("QUERYPARAM_TEST::"+QUERYPARAM_TEST);
+			Map<String, Object> paramMap = new HashMap<String,Object>();
 			
-			resultMap.put("test111", "111111111");
-			resultMap.put("test222", "2222222");
-			resultMap.put("test333", "33333333333333333333");
+			List<Map<String, Object>> memberList = new ArrayList<Map<String,Object>>();
+			memberList = loginMapper.selectOneUser(paramMap);
+			
+			resultMap.put("MEMBER_LIST", memberList);
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
